@@ -22,11 +22,13 @@ import javax.swing.JPasswordField;
  * @author nc
  */
 public class Connexion extends javax.swing.JDialog {
+
     private InterfaceGraphique fenetre;
+
     /**
      * Creates new form Connexion
      */
-   public Connexion(java.awt.Frame parent, boolean modal) {
+    public Connexion(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         //positionnement au milieu de la fenetre parente
@@ -35,7 +37,7 @@ public class Connexion extends javax.swing.JDialog {
         //sur la precedente fenêtre dans fermer connexion
         this.setModal(true);
         //on stocke dans this.fenetre la référence vers la fenetre parente
-        this.fenetre=(InterfaceGraphique)parent;
+        this.fenetre = (InterfaceGraphique) parent;
     }
 
     /**
@@ -170,57 +172,54 @@ public class Connexion extends javax.swing.JDialog {
          * Code ici qui va interroger la base de données
          */
         //Vérification des saisies
-       if (jTextFieldIdentifiant.getText().length()==0 || jPasswordMDP.getText().length()==0){
+        if (jTextFieldIdentifiant.getText().length() == 0 || jPasswordMDP.getText().length() == 0) {
             JOptionPane.showMessageDialog(this, "Erreur de saisie, les deux champs doivent être renseignés.");
-            
+
             this.fenetre.deconnecte();
-        }else{
-            
+        } else {
+
             try {
                 //interrogation de la BD pour savoir si l'identifiant/mot de passe est correct
                 //instanciation de la classe Driver du paquetage jdbc de mysql
                 Class.forName("com.mysql.jdbc.Driver");
                 //Chaine de connexion (prise dans l'onglet services)
-                String connexionUrl="jdbc:mysql://localhost:3333/gsbperso?user=gsbperso&password=sio";
-               
+                String connexionUrl = "jdbc:mysql://localhost:3333/gsbperso?user=gsbperso&password=sio";
+
                 //etablissement de la connexion
-                Connection maConnexion=(Connection)DriverManager.getConnection(connexionUrl);
-                
+                Connection maConnexion = (Connection) DriverManager.getConnection(connexionUrl);
+
                 //requete
-                Statement requete=maConnexion.createStatement();
-                String identifiant=jTextFieldIdentifiant.getText();
-                String mdp=jPasswordMDP.getText();
-                
-            
+                Statement requete = maConnexion.createStatement();
+                String identifiant = jTextFieldIdentifiant.getText();
+                String mdp = jPasswordMDP.getText();
+
                 //application du cryptage md5 au mdp
                 // ici on appelle md5 membre static de la classe outils
-                mdp=Outils.md5(mdp);
-                System.out.println("select * from utilisateurs where identifiant='"+identifiant+"' and mot_de_passe='"+mdp+"'");
-                ResultSet lignesRetournees=requete.executeQuery("select * from utilisateurs where identifiant='"+identifiant+"' and mot_de_passe='"+mdp+"'");
-                if (lignesRetournees.next()){
-                    String nom=lignesRetournees.getString("nom");
+                mdp = Outils.md5(mdp);
+                System.out.println("select * from utilisateurs where identifiant='" + identifiant + "' and mot_de_passe='" + mdp + "'");
+                ResultSet lignesRetournees = requete.executeQuery("select * from utilisateurs where identifiant='" + identifiant + "' and mot_de_passe='" + mdp + "'");
+                if (lignesRetournees.next()) {
+                    String nom = lignesRetournees.getString("nom");
+                    int unRole = lignesRetournees.getInt("id_role");
                     //Modifications de la Mission 2 à placer ici
-                    
-                    
-                    this.fenetre.connecte(nom);
+                    if (unRole == 1) {
+                        fenetre.directeur();
+                        this.fenetre.connecte(nom);
+                    }
                     this.setVisible(false);
-                    this.fenetre.majConnexion();
-                    
-                }else{
+
+                } else {
                     JOptionPane.showMessageDialog(rootPane, "identifiant ou mot de passe incorrect");
                 };
-                
-                
+
             } catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(rootPane, "Classe de connexion mysql non trouvee..."+ex.toString());
+                JOptionPane.showMessageDialog(rootPane, "Classe de connexion mysql non trouvee..." + ex.toString());
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane, "SQL exception ... " + ex.toString());
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
             }
-             catch (SQLException ex) {
-                JOptionPane.showMessageDialog(rootPane, "SQL exception ... "+ex.toString());
-            }
-            catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
-            }
-       }
+        }
 
     }//GEN-LAST:event_jButtonConnecterActionPerformed
 

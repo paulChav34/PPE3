@@ -171,7 +171,7 @@ public class Inscription extends javax.swing.JDialog {
 
         jLabelRole.setText("Role");
 
-        jComboBoxUnRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
+        jComboBoxUnRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Directeur", "Responsable", "Employe" }));
         jComboBoxUnRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxUnRoleActionPerformed(evt);
@@ -180,7 +180,7 @@ public class Inscription extends javax.swing.JDialog {
 
         jLabelPosition.setText("Position");
 
-        jComboBoxUnePosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
+        jComboBoxUnePosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dirigeant", "Cadre", "Non-cadre" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
